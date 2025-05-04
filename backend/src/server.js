@@ -2,6 +2,7 @@ const express = require('express');
 const dotenv = require('dotenv');
 const cors = require('cors');  // Ajout de la gestion CORS
 const enhanceRoutes = require('./routes/enhanceRoutes');
+const suggestionsRoutes = require('./routes/suggestionsRoutes');
 const { errorHandler } = require('./middlewares/errorHandler');
 
 dotenv.config();
@@ -16,6 +17,7 @@ app.use(express.json());
 
 // API Routes
 app.use('/api/enhance', enhanceRoutes);
+app.use('/api/suggestions', suggestionsRoutes);
 
 // Error Handling Middleware (always after routes)
 app.use(errorHandler);

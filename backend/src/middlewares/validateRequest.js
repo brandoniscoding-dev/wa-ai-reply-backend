@@ -39,6 +39,10 @@ const validateTranslation = (req, res, next) => {
   validate(schema, req, res, next);
 };
 
+const valaidateSuggestions = (req, res, next) => {
+    
+}
+
 // Generic validation function
 const validate = (schema, req, res, next) => {
   const { error } = schema.validate(req.body);
