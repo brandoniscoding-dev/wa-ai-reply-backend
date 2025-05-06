@@ -1,0 +1,150 @@
+.suggestions {
+    background: var(--background-default);
+    border-left: 1px solid var(--border-list);
+    padding: 10px 5px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 8px;
+    overflow-x: hidden;
+  }
+  
+  /* Boîte des suggestions */
+  .suggestion {
+    position: relative;
+    padding: 10px 16px;
+    background: var(--filters-item-background);
+    display: inline-block;
+    border-radius: 999px;
+    color: var(--filters-item-color);
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 0.95rem;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.06);
+    border: 1px solid transparent;
+    user-select: none;
+  }
+  
+  /* Hover */
+  .suggestion:hover {
+    background: var(--filters-item-background-hover);
+    transform: scale(1.05);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+  
+  /* Copié avec feedback visuel */
+  .suggestion.copied {
+    animation: pulseCopy 0.6s ease-in-out;
+    background-color: #4caf50 !important;
+    color: white !important;
+  }
+  
+  /* Bouton de relance */
+  .suggestion.resuggest {
+    background-color: #f5f5f5;
+    font-weight: bold;
+    font-size: 0.9rem;
+    color: #444;
+    border: 1px solid #ccc;
+  }
+  
+  /* État de chargement global */
+  .suggestion.loading {
+    background: linear-gradient(270deg, #ccc, #eee);
+    background-size: 400% 400%;
+    animation: shimmer 1.2s ease infinite;
+    color: #999;
+  }
+  
+  /* Chargement individuel (sur clic d'une suggestion) */
+  .suggestion.loading::after {
+    content: "";
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 18px;
+    height: 18px;
+    border: 2px solid rgba(255, 255, 255, 0.6);
+    border-top-color: var(--filters-item-color);
+    border-radius: 50%;
+    animation: spin 0.6s linear infinite;
+    transform: translate(-50%, -50%);
+  }
+  
+  /* Tooltip */
+  .tooltip {
+    display: inline-block;
+    background-color: #555;
+    color: white;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 10px;
+    position: absolute;
+    z-index: 1;
+    font-size: 0.75rem;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(73px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s, transform 0.3s;
+  }
+  
+  .tooltip.visible {
+    opacity: 1;
+    transform: translateX(-50%) translateY(46px);
+  }
+  
+  /* Champ texte personnalisé */
+  .prompt {
+    outline: none;
+    display: inline-block;
+    width: 800px;
+    border-radius: 20px;
+    margin: 10px 10px 5px;
+    padding: 8px 14px;
+    border: 2px solid var(--filters-item-background-hover);
+    color: var(--filters-item-color);
+    background: transparent;
+    transition: border-color 0.3s, box-shadow 0.3s;
+  }
+  
+  .prompt:focus {
+    border-color: #66afe9;
+    box-shadow: 0 0 5px rgba(102, 175, 233, 0.6);
+  }
+  
+  /* ANIMATIONS */
+  @keyframes shimmer {
+    0% {
+      background-position: 200% 0;
+    }
+    100% {
+      background-position: -200% 0;
+    }
+  }
+  
+  @keyframes pulseCopy {
+    0% {
+      transform: scale(1);
+      opacity: 1;
+    }
+    50% {
+      transform: scale(1.15);
+      opacity: 0.8;
+    }
+    100% {
+      transform: scale(1);
+      opacity: 1;
+    }
+  }
+  
+  @keyframes spin {
+    0% {
+      transform: translate(-50%, -50%) rotate(0deg);
+    }
+    100% {
+      transform: translate(-50%, -50%) rotate(360deg);
+    }
+  }
+  

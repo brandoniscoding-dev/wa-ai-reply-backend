@@ -1,0 +1,49 @@
+{
+    "manifest_version": 3,
+    "name": "WA AI-Reply",
+    "description": "WA Ai Suggestions is a chrome extension that allows you to get reply suggestions for your messages on WhatsApp Web using AI",
+    "version": "1.0",
+    "permissions": [
+        "storage",
+        "activeTab",
+        "scripting"
+    ],
+    "action": {
+        "default_popup": "popup/index.html",
+        "default_icon": {
+            "16": "assets/icons/icon16.png",
+            "48": "assets/icons/icon48.png",
+            "128": "assets/icons/icon128.png"
+        }
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "https://web.whatsapp.com/*"
+            ],
+            "js": [
+                "content/suggestions/suggestions-inject.js"
+            ],
+            "css": [
+                "content/suggestions/suggestions-inject.css"
+            ]
+        }
+    ],
+    "host_permissions": [
+        "https://web.whatsapp.com/*"
+    ],
+    "background": {
+        "service_worker": "background/background.js"
+    },
+    "web_accessible_resources": [
+        {
+            "resources": [
+                "content/suggestions/suggestions-inject.css"
+            ],
+            "matches": [
+                "https://web.whatsapp.com/*"
+            ]
+        }
+    ],
+    "options_page": "popup/index.html"
+}
