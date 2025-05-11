@@ -1,0 +1,168 @@
+body {
+  margin: 0;
+  font-family: 'Segoe UI', sans-serif;
+  transition: background 0.3s, color 0.3s;
+  width: 400px;
+  height: 440px;
+  box-sizing: border-box;
+  background-color: #121c24;
+  color: white;
+}
+
+.popup-container {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 20px;
+}
+
+.popup-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.logo {
+  width: 48px;
+  height: 48px;
+  border-radius: 12px;
+}
+
+.header-right {
+  display: flex;
+  align-items: center;
+  gap: 30px;
+}
+
+.version {
+  font-size: 0.75rem;
+  color: #aaa;
+}
+
+.icon-buttons {
+  display: flex;
+  gap: 15px;
+}
+
+.icon-buttons i {
+  cursor: pointer;
+  font-size: 1rem;
+  color: #ccc;
+  transition: transform 0.2s, color 0.2s;
+}
+
+.icon-buttons i:hover {
+  transform: scale(1.2);
+  color: #00e0ff;
+}
+
+.popup-content {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
+  text-align: center;
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: bold;
+  margin: 10px 0 6px;
+}
+
+.subtitle {
+  font-size: 0.9rem;
+  color: #bbb;
+  margin-bottom: 24px;
+}
+
+.cta-section {
+  margin-bottom: 24px;
+}
+
+.cta-button {
+  background-color: #00bcd4;
+  color: white;
+  padding: 10px 24px;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  transition: background-color 0.3s, transform 0.3s;
+}
+
+.cta-button:hover {
+  background-color: #009cb0;
+  transform: scale(1.05);
+}
+
+.cta-text {
+  margin-top: 50px;
+  font-size: 0.9rem;
+  color: #ddd;
+  transition: color 0.3s;
+}
+
+.info-cards {
+  display: flex;
+  justify-content: space-around;
+  gap: 8px;
+  margin-top: auto;
+  margin-bottom: 12px;
+  width: 100%;
+}
+
+.card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  font-size: 0.85rem;
+  color: white;
+  text-align: center;
+  transition: transform 0.2s, color 0.2s;
+}
+
+.card i {
+  font-size: 1.6rem;
+  margin-bottom: 4px;
+  color: #00e0ff;
+}
+
+.card:hover {
+  transform: scale(1.1);
+  cursor: pointer;
+}
+
+.card span {
+  white-space: nowrap;
+}
+
+.popup-footer {
+  text-align: center;
+  font-size: 0.75rem;
+  color: #888;
+}
+
+body.light-mode {
+  background-color: #f5f5f5;
+  color: #1a1a1a;
+}
+
+body.light-mode .popup-footer,
+body.light-mode .subtitle,
+body.light-mode .version {
+  color: #444;
+}
+
+body.light-mode .cta-text {
+  color: #444;
+}
+
+body.light-mode .card i {
+  color: #00e0ff;
+}
+
+body.light-mode .info-cards-text {
+  color: #444;
+}
+
