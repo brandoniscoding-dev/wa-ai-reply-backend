@@ -1,6 +1,6 @@
 const axios = require('axios');
 const { logger } = require('./logger');
-require('dotenv').config(); // Load environment variables
+require('dotenv').config(); 
 
 const IA_API_URL = process.env.IA_API_URL; // Gemini API URL
 const IA_API_KEY = process.env.IA_API_KEY; // Gemini API Key
@@ -8,7 +8,6 @@ const IA_API_KEY = process.env.IA_API_KEY; // Gemini API Key
 
 exports.callIA = async (prompt) => {
   try {
-    // Validate the API URL and Key
     if (!IA_API_URL || !IA_API_KEY) {
       throw new Error('API URL or API Key is missing.');
     }
