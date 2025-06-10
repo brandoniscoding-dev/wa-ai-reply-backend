@@ -1,0 +1,67 @@
+name: CI/CD Pipeline for Egolya Backend
+
+on:
+  push:
+    branches:
+      - master
+      - dev
+  pull_request:
+    branches:
+      - dev
+      - master
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Run tests
+        run: npm test
+
+      - name: Run linter
+        run: npm run lint
+        if: always()
+
+  deploy:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.event_name == 'push' && github.ref == 'refs/heads/master'
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Transfer code to Cotanbo
+        run: |
+          tar -czf egolya-backend.tar.gz .
+          scp egolya-backend.tar.gz ${{ secrets.COTANBO_USERNAME }}@${{ secrets.COTANBO_HOST }}:/tmp/egolya-backend.tar.gz
+
+      - name: Deploy with Docker Compose on Cotanbo
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.COTANBO_HOST }}
+          username: ${{ secrets.COTANBO_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            # Crée un dossier pour le projet
+            mkdir -p /app/egolya-backend
+            # Décompresse le code source
+            tar -xzf /tmp/egolya-backend.tar.gz -C /app/egolya-backend
+            # Nettoie le fichier temporaire
+            rm /tmp/egolya-backend.tar.gz
+            # Va dans le dossier du projet
+            cd /app/egolya-backend
+            # Arrête et supprime les anciens conteneurs
+            docker-compose down || true
+            # Construit et lance avec Docker Compose
+            docker-compose up --build -d

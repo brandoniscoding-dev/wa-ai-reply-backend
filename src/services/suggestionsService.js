@@ -5,8 +5,15 @@ const extractJsonFromText = (text) => {
   try {
     const jsonStart = text.indexOf("{");
     const jsonEnd = text.lastIndexOf("}") + 1;
+    if (jsonStart === -1 || jsonEnd === 0) {
+      throw new Error("No valid JSON found");
+    }
     const jsonString = text.slice(jsonStart, jsonEnd);
-    return JSON.parse(jsonString);
+    const parsed = JSON.parse(jsonString);
+    if (!parsed.suggestions || !Array.isArray(parsed.suggestions)) {
+      throw new Error("Invalid suggestions format");
+    }
+    return parsed;
   } catch (err) {
     console.error("[Service] Erreur d'extraction JSON :", err);
     return { suggestions: [] };
@@ -15,14 +22,14 @@ const extractJsonFromText = (text) => {
 
 /**
  * Génère des suggestions de réponses basées sur l'identité et une conversation.
- * @param {string} identity - L'identité du user (background, mindset, etc.)
+ * @param {string} identity - L'identité de l'utilisateur (par défaut : "I am not AI")
  * @param {Array} messages - Liste d'objets { name, message }
- * @returns {Array} suggestions - Liste de 3 messages
+ * @returns {Promise<Array>} suggestions - Liste de 3 messages
  */
-exports.generateSuggestions = async (identity, messages) => {
+exports.generateSuggestions = async (identity, messages = []) => {
   try {
     console.log("[Service] /suggestions - Génération avec :", {
-      identityPreview: identity?.slice(0, 100),
+      identityPreview: identity?.slice(0, 100) || "I am not AI",
       messageCount: messages.length
     });
 
@@ -35,11 +42,10 @@ You are "ME", the person replying in the chat, fully embodying my personality, t
 
 You have access to:
 - My identity: my personality, background, tone, and communication preferences.
-- The conversation history with "THEM" in the current session (identified by session ID).
-- The session ID to ensure responses stay consistent with the current chat.
+- The conversation history with "THEM".
 
 Your mission:
-Generate 3 possible replies that I ("ME") would naturally send next, perfectly matching my identity, the conversation's tone, and the context of the session.
+Generate 3 possible replies that I ("ME") would naturally send next, perfectly matching my identity and the conversation's tone.
 
 CRITICAL RULES:
 - Respond **as ME** — never mention or imply you are an assistant, AI, or generator.
@@ -58,7 +64,7 @@ USER IDENTITY:
 ${identity}
 """
 
-CONVERSATION HISTORY (SESSION ID: ${sessionId}):
+CONVERSATION HISTORY:
 """
 ${conversation}
 """
@@ -68,12 +74,12 @@ RESPONSE GUIDELINES:
   1. Short: A punchy, one-liner that feels natural and direct.
   2. Nuanced: 1-2 sentences with emotional depth or context, reflecting my personality.
   3. Expressive: Up to 3 sentences, creative, humorous, or detailed if it fits my identity and the tone.
-- Ensure replies are varied but consistent with my identity, the conversation's tone, and the session context.
+- Ensure replies are varied but consistent with my identity and the conversation's tone.
 - Use my identity to shape the tone, style, and vocabulary (e.g., direct, witty, empathetic, professional).
 - If my identity includes specific traits (e.g., "Coach business, tutoiement, direct"), reflect these clearly in the responses.
 
 OUTPUT:
-Return ONLY a valid JSON object with 3 suggestions, and nothing else.
+Return ONLY a valid JSON object with exactly 3 suggestions, and nothing else.
 
 {
   "suggestions": [
@@ -95,6 +101,6 @@ Return ONLY a valid JSON object with 3 suggestions, and nothing else.
     return parsed.suggestions;
   } catch (error) {
     console.error("[ERROR] /suggestions - Erreur lors du traitement :", error);
-    throw error;
+    return [];
   }
 };
