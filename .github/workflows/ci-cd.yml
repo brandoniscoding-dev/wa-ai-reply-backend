@@ -50,6 +50,11 @@ jobs:
           script: |
             mkdir -p /home/softengine/egolya-backend
 
+      - name: Add Cotanbo to known_hosts
+        run: |
+          mkdir -p ~/.ssh
+          ssh-keyscan -H ${{ secrets.COTANBO_HOST }} >> ~/.ssh/known_hosts
+
       - name: Sync code to Cotanbo
         run: |
           rsync -avz --delete \
