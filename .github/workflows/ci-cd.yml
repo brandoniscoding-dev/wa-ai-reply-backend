@@ -11,48 +11,18 @@ on:
       - master
 
 jobs:
-  # test:
-  #   runs-on: ubuntu-latest
-  #   steps:
-  #     - name: Checkout code
-  #       uses: actions/checkout@v4
-
-  #     - name: Set up Node.js
-  #       uses: actions/setup-node@v4
-  #       with:
-  #         node-version: '18'
-
-  #     - name: Install dependencies
-  #       run: npm install
-
-  #     - name: Run tests
-  #       run: npm test
-
-  #     - name: Run linter
-  #       run: npm run lint
-  #       if: always()
-
   deploy:
-    # needs: test  # ← désactivé car job test est commenté
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Prepare target directory on Cotanbo
-        uses: appleboy/ssh-action@v1
-        with:
-          host: ${{ secrets.COTANBO_HOST }}
-          username: ${{ secrets.COTANBO_USERNAME }}
-          key: ${{ secrets.SSH_PRIVATE_KEY }}
-          port: 22
-          script: |
-            mkdir -p /home/softengine/egolya-backend
-
-      - name: Add Cotanbo to known_hosts
+      - name: Set up SSH and known hosts
         run: |
           mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
           ssh-keyscan -H ${{ secrets.COTANBO_HOST }} >> ~/.ssh/known_hosts
 
       - name: Sync code to Cotanbo
