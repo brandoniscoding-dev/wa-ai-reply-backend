@@ -43,7 +43,7 @@ jobs:
 
       - name: Transfer code to Cotanbo
         run: |
-          tar -czf egolya-backend.tar.gz .
+          tar --exclude='./.git' --exclude='./.github' --exclude='./node_modules' -czf egolya-backend.tar.gz .
           scp egolya-backend.tar.gz ${{ secrets.COTANBO_USERNAME }}@${{ secrets.COTANBO_HOST }}:/tmp/egolya-backend.tar.gz
 
       - name: Deploy with Docker Compose on Cotanbo
