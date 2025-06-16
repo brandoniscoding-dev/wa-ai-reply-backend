@@ -33,18 +33,30 @@ jobs:
   #       if: always()
 
   deploy:
-    # dépendait de test (commenté) donc on l'ajuste aussi :
-    # needs: test
+    # needs: test  # ← désactivé car job test est commenté
     runs-on: ubuntu-latest
     if: github.event_name == 'push' && github.ref == 'refs/heads/master'
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
 
-      - name: Transfer code to Cotanbo
+      - name: Prepare target directory on Cotanbo
+        uses: appleboy/ssh-action@v1
+        with:
+          host: ${{ secrets.COTANBO_HOST }}
+          username: ${{ secrets.COTANBO_USERNAME }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          port: 22
+          script: |
+            mkdir -p /app/egolya-backend
+
+      - name: Sync code to Cotanbo
         run: |
-          tar --exclude='./.git' --exclude='./.github' --exclude='./node_modules' -czf egolya-backend.tar.gz .
-          scp egolya-backend.tar.gz ${{ secrets.COTANBO_USERNAME }}@${{ secrets.COTANBO_HOST }}:/tmp/egolya-backend.tar.gz
+          rsync -avz --delete \
+            --exclude '.git' \
+            --exclude '.github' \
+            --exclude 'node_modules' \
+            ./ ${{ secrets.COTANBO_USERNAME }}@${{ secrets.COTANBO_HOST }}:/app/egolya-backend
 
       - name: Deploy with Docker Compose on Cotanbo
         uses: appleboy/ssh-action@v1
@@ -54,15 +66,6 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: 22
           script: |
-            # Crée un dossier pour le projet
-            mkdir -p /app/egolya-backend
-            # Décompresse le code source
-            tar -xzf /tmp/egolya-backend.tar.gz -C /app/egolya-backend
-            # Nettoie le fichier temporaire
-            rm /tmp/egolya-backend.tar.gz
-            # Va dans le dossier du projet
             cd /app/egolya-backend
-            # Arrête et supprime les anciens conteneurs
             docker-compose down || true
-            # Construit et lance avec Docker Compose
             docker-compose up --build -d
