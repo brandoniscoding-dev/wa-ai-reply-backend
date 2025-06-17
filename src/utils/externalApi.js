@@ -1,5 +1,5 @@
 const { ConversationChain } = require("langchain/chains");
-const { ChatPromptTemplate, HumanMessagePromptTemplate, SystemMessagePromptTemplate } = require("langchain/prompts");
+const { ChatPromptTemplate, HumanMessagePromptTemplate, SystemMessagePromptTemplate } = require("@langchain/core/prompts");
 const { ConversationBufferMemory } = require("langchain/memory");
 const { callIA } = require("../utils/externalApi");
 

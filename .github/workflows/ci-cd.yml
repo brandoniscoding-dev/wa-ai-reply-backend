@@ -60,5 +60,4 @@ jobs:
           port: 22
           script: |
             cd /home/softengine/egolya-backend
-            docker-compose down || true
-            docker-compose up --build -d
+            docker compose up --build -d
